@@ -29,6 +29,30 @@ var iDB = (function() {
     request.onerror = DB.onerror;
   };
 
+  // Fetch todo
+  DB.fetchTodos = function(callback) {
+    var db = datastore;
+    var transaction = db.transaction(['todo'], 'readwrite');
+    var objStore = transaction.objectStore('todo');
+    var keyRange = IDBKeyRange.lowerBound(0);
+    var cursorRequest = objStore.openCursor(keyRange);
+
+    var todos = [];
+    transaction.oncomplete = function(e) {
+      callback(todos);
+    };
+
+    cursorRequest.onsuccess = function(e) {
+      var result = e.target.result;
+      if(!!result == false) {
+        return;
+      }
+      todos.push(result.value);
+      result.continue();
+    };
+    cursorRequest.onerror = DB.onerror;
+  };
+
   // Create todo
   DB.createTodo = function(text, callback) {
     var db = datastore;
