@@ -71,5 +71,19 @@ var iDB = (function() {
     request.onerror  = DB.onerror;
   };
 
+  // Delete todo
+  DB.deleteTodo = function(id, callback) {
+    var db = datastore;
+    var transaction = db.transaction(['todo'], 'readwrite');
+    var objStore = transaction.objectStore('todo');
+    var request = objStore.delete(id);
+    request.onsuccess = function(e) {
+      callback();
+    }
+    request.onerror = function(e) {
+      console.log(e);
+    }
+  };
+
   return DB;
 }());

@@ -24,8 +24,9 @@ window.onload = function() {
       var todoList = document.getElementById('todo-items');
       todoList.innerHTML = '';
 
-      for(var i=0;i<todos.length;i++) {
-        var todo = todos[(todos.length -1 + i)];
+      for(var i=todos.length;i>=0;i--) {
+        var todo = todos[i-1];
+        console.log(todo);
         var li = document.createElement('li');
         li.id = 'todo-' + todo.timestamp;
         var checkbox = document.createElement('input');
@@ -37,9 +38,11 @@ window.onload = function() {
         span.innerHTML = todo.text;
         li.appendChild(span);
         todoList.appendChild(li);
+
+        // event listener to delete todo
         checkbox.addEventListener('click', function(e) {
           var id = parseInt(e.target.getAttribute('data-id'));
-          todoDB.deleteTodo(id, refreshTodos);
+          iDB.deleteTodo(id, refreshTodos);
         });
       }
     });
